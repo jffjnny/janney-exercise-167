@@ -1,0 +1,360 @@
+//AUTHOR: Jeff Janney
+//COURSE: CPT167
+//PURPOSE: User chooses destination, transportation type and upgrade for trip then the
+//program outputs chosen options and cost, including total, as well as counts trips of each type and total.
+//STARTDATE: 7/19/2021
+
+package edu.cpt167.janney.project6;
+
+import java.util.Scanner;
+public class JanneyMainClass 
+{//begin main class
+	
+	//List of class constants
+	public static String DESTINATION_NAME_A = "Rome, Italy";
+	public static String DESTINATION_NAME_B = "London, England";
+	public static String DESTINATION_NAME_C = "Key West, Florida";
+	public static String DESTINATION_NAME_QUIT = "Quit";
+	public static double DESTINATION_PRICE_A = 1500.00;
+	public static double DESTINATION_PRICE_B = 750.00;
+	public static double DESTINATION_PRICE_C = 500.00;
+	public static String TRANSPORTATION_NAME_A = "Airplane";
+	public static String TRANSPORTATION_NAME_B = "Ship";
+	public static double TRANSPORTATION_PRICE_A = 500.00;
+	public static double TRANSPORTATION_PRICE_B = 250.00;
+	public static String UPGRADE_NAME_A = "First-class transportation";
+	public static String UPGRADE_NAME_B = "First-class lodging";
+	public static String UPGRADE_NAME_C = "Guided tours";
+	public static String UPGRADE_NAME_D = "All upgraded services";
+	public static String UPGRADE_NAME_E = "No upgraded services";
+	public static double UPGRADE_PRICE_A = 75.00;
+	public static double UPGRADE_PRICE_B = 125.00;
+	public static double UPGRADE_PRICE_C = 50.00;
+	public static double UPGRADE_PRICE_D = 200.00;
+	public static double UPGRADE_PRICE_E = 0.0;
+	
+	//Main Method
+	public static void main(String[] args)
+	{
+		Scanner input = new Scanner(System.in); //open scanner input
+		
+		String userName = "";
+		char destinationSelection = ' ';
+		char transportationSelection = ' ';
+		char upgradeSelection = ' ';
+		String destinationName = "";
+		String transportationName = "";
+		String upgradeName = "";
+		double lodgingCost = 0.0;
+		double transportationCost = 0.0;
+		double upgradeCost = 0.0;
+		double tripCost = 0.0;
+		int destinationCountA = 0;
+		int destinationCountB = 0;
+		int destinationCountC = 0;
+		int transportationCountA = 0;
+		int transportationCountB = 0;
+		int upgradeCountA = 0;
+		int upgradeCountB = 0;
+		int upgradeCountC = 0;
+		int upgradeCountD = 0;
+		int upgradeCountE = 0;
+		int tripCounter = 0;
+		double totalTripSales = 0.0;
+		
+		displayWelcomeBanner();//call method to display welcome
+		userName = getUserName(input); //assign userName with return from getUserName method
+		destinationSelection = validateDestinationSelection(input); //assign destinationSelection value from validateDestinationSelection method
+		
+		while (destinationSelection != 'Q')
+		{//being while loop to determine destinationSelection is not equal to Q
+			transportationSelection = validateTransportationSelection(input);
+			upgradeSelection = validateUpgradeSelection(input);
+			
+			//using if else statement to assign constant value to destinationName and lodgingCost based on destination selection
+			if (destinationSelection == 'A')
+			{//begin if
+				destinationName = DESTINATION_NAME_A;
+				lodgingCost = DESTINATION_PRICE_A;	
+				destinationCountA++;
+			}//end if
+			else if (destinationSelection == 'B')
+			{//begin else if
+				destinationName = DESTINATION_NAME_B;
+				lodgingCost = DESTINATION_PRICE_B;
+				destinationCountB++;
+			}//end else if
+			else
+			{//begin else
+				destinationName = DESTINATION_NAME_C;
+				lodgingCost = DESTINATION_PRICE_C;
+				destinationCountC++;
+			}//end else
+			
+			//using if else statement to assign constant value to transportationName and transportationCost based on transportationSelection
+			if (transportationSelection == 'A')
+			{//begin if
+				transportationName = TRANSPORTATION_NAME_A;
+				transportationCost = TRANSPORTATION_PRICE_A;
+				transportationCountA++;
+			}//end if
+			else
+			{//begin else
+				transportationName = TRANSPORTATION_NAME_B;
+				transportationCost = TRANSPORTATION_PRICE_B;
+				transportationCountB++;
+			}//end else
+			
+			//using if else statement to assign constant value to upgradeName and upgradeCost based on upgradeSelection
+			if (upgradeSelection == 'A' )
+			{//begin if
+				upgradeName = UPGRADE_NAME_A;
+				upgradeCost = UPGRADE_PRICE_A;
+				upgradeCountA++;
+			}//end if
+			else if (upgradeSelection == 'B')
+			{//begin else if
+				upgradeName = UPGRADE_NAME_B;
+				upgradeCost = UPGRADE_PRICE_B;
+				upgradeCountB++;
+			}//end else if
+			else if (upgradeSelection == 'C')
+			{//begin else if
+				upgradeName = UPGRADE_NAME_C;
+				upgradeCost = UPGRADE_PRICE_C;
+				upgradeCountC++;
+			}//end else if
+			else if (upgradeSelection == 'D')
+			{//begin else if
+				upgradeName = UPGRADE_NAME_D;
+				upgradeCost = UPGRADE_PRICE_D;
+				upgradeCountD++;
+			}//end else if
+			else
+			{//begin else
+				upgradeName = UPGRADE_NAME_E;
+				upgradeCost = UPGRADE_PRICE_E;
+				upgradeCountE++;
+			}//end else
+			
+		
+			//calculate tripCost, tripCounter, totalTripSales, then pass values to displayTripReport method and display information
+			tripCost = lodgingCost + transportationCost + upgradeCost;
+			tripCounter++;
+			totalTripSales = totalTripSales + tripCost;
+			displayTripReport(destinationName, lodgingCost, transportationName, transportationCost, upgradeName, upgradeCost, tripCost);
+			destinationSelection = validateDestinationSelection(input);
+			
+		}//end while loop
+		
+		//use if statement to call displayFinalReport method if tripCounter > 0
+		if (tripCounter > 0)
+		{
+			displayFinalReport(userName, destinationCountA, destinationCountB, destinationCountC, transportationCountA, transportationCountB, upgradeCountA, upgradeCountB, upgradeCountC, upgradeCountD, upgradeCountE, tripCounter, totalTripSales);
+		}//end if statement
+		
+		//call displayFarewellMessage method
+		displayFarewellMessage();
+		
+		input.close();//close scanner
+	}//end main method
+	
+	
+	//method header for display method to display Welcome Banner
+	public static void displayWelcomeBanner()
+	{
+		//begin welcome message
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("Thank you for using the destination and transportation cost");
+		System.out.println("calculator device! This program will help plan your");
+		System.out.println("trip and calculate the cost.");
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("");//line break
+	}//end displayWelcomeBanner method
+
+	//method header for display method to display farewell message
+	public static void displayFarewellMessage()
+	{
+		//Farewell message
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("Thanks for using this system.");
+		System.out.println("Have a great day!");
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+	}//end displayFarewellMessage method
+
+	//method header for display method, with parameters listed with type and "borrowed" name
+	public static void displayTripReport(String borrowedDestinationName, double borrowedLodgingCost, String borrowedTransportationName, double borrowedTransportationCost, String borrowedUpgradeName, double borrowedUpgradeCost, double borrowedTripCost)
+	{
+		//output of information formatted in columns
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("Trip Report");
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.printf("%-25s%-10s\n", "Destination Name", borrowedDestinationName);
+		System.out.printf("%-25s%-1s%9.2f\n\n", "Lodging Price", "$", borrowedLodgingCost);
+		System.out.printf("%-25s%-10s\n", "Transportation Type", borrowedTransportationName);
+		System.out.printf("%-25s%-1s%9.2f\n\n", "Transportation Price", "$", borrowedTransportationCost);
+		System.out.printf("%-25s%-10s\n", "Upgrade Selection", borrowedUpgradeName);
+		System.out.printf("%-25s%-1s%9.2f\n\n", "Upgrade Price", "$", borrowedUpgradeCost);
+		System.out.printf("%-25s%-1s%9.2f\n", "Total Trip Cost", "$", borrowedTripCost);
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println(""); //line break
+	}//end displayTripReport method
+
+	//method header for display method, with parameters listed with type and "borrowed" name
+	public static void displayFinalReport(String borrowedUserName, int borrowedDestinationCountA, int borrowedDestinationCountB, int borrowedDestinationCountC, int borrowedTransportationCountA, int borrowedTransportationCountB, int borrowedUpgradeCountA, int borrowedUpgradeCountB, int borrowedUpgradeCountC, int borrowedUpgradeCountD, int borrowedUpgradeCountE,
+			 int borrowedTripCounter, double borrowedTotalTripSales)
+	{
+		//output of information formatted in columns
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("FINAL REPORT");
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.printf("%-25s%-10s\n", "Traveler Name", borrowedUserName);
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("Count of Trips:");
+		System.out.printf("%-20s%15s\n", DESTINATION_NAME_A, borrowedDestinationCountA);
+		System.out.printf("%-20s%15s\n", DESTINATION_NAME_B, borrowedDestinationCountB);
+		System.out.printf("%-20s%15s\n", DESTINATION_NAME_C, borrowedDestinationCountC);
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("Count of Transportation Options:");
+		System.out.printf("%-20s%15s\n", TRANSPORTATION_NAME_A, borrowedTransportationCountA);
+		System.out.printf("%-20s%15s\n", TRANSPORTATION_NAME_B, borrowedTransportationCountB);
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("Count of Upgrades:");
+		System.out.printf("%-20s%9s\n", UPGRADE_NAME_A, borrowedUpgradeCountA);
+		System.out.printf("%-20s%15s\n", UPGRADE_NAME_B, borrowedUpgradeCountB);
+		System.out.printf("%-20s%15s\n", UPGRADE_NAME_C, borrowedUpgradeCountC);
+		System.out.printf("%-20s%14s\n", UPGRADE_NAME_D, borrowedUpgradeCountD);
+		System.out.printf("%-20s%15s\n", UPGRADE_NAME_E, borrowedUpgradeCountE);
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.printf("%-20s%10s\n", "Count of all trips", borrowedTripCounter);
+		System.out.printf("%-20s%1s%9.2f\n", "Grand Total", "$", borrowedTotalTripSales);
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println(""); //blank line
+	}//end displayFinalReport method
+
+	//method header for display method, with parameters listed with type and "borrowed" name
+	public static void displayDestinationMenu()
+	{
+		//table for destination menu
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("DESTINATION MENU");
+		System.out.printf("%-6s%-12s%9s%8.2f%11s\n", "[A]", DESTINATION_NAME_A, "$", DESTINATION_PRICE_A, " /5 day stay");
+		System.out.printf("%-6s%-12s%6s%8.2f%11s\n", "[B]", DESTINATION_NAME_B, "$", DESTINATION_PRICE_B, " /5 day stay");
+		System.out.printf("%-6s%-12s%4s%8.2f%11s\n", "[C]", DESTINATION_NAME_C, "$", DESTINATION_PRICE_C, " /5 day stay");	
+		System.out.printf("%-6s%-12s\n", "[Q]", DESTINATION_NAME_QUIT);
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("Enter your selection here:");
+	}//end DisplayDestinationMenu method
+	
+	//method header for display method, with parameters listed with type and "borrowed" name
+	public static void displayTransportationMenu()
+	{
+		//table for transportation menu
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("TRANSPORTATION MENU");
+		System.out.printf("%-6s%-12s%6s%8.2f\n", "[A]", TRANSPORTATION_NAME_A, "$", TRANSPORTATION_PRICE_A);
+		System.out.printf("%-6s%-12s%6s%8.2f\n", "[B]", TRANSPORTATION_NAME_B, "$", TRANSPORTATION_PRICE_B);	
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("Enter your selection here:");
+	}//end DisplayTransportationMenu method
+	
+	//method header for display method, with parameters listed with type and "borrowed" name
+	public static void displayUpgradeMenu()
+	{
+		//table for upgrade menu
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("UPGRADE MENU");
+		System.out.printf("%-6s%-12s%6s%8.2f\n", "[A]", UPGRADE_NAME_A, "$", UPGRADE_PRICE_A);
+		System.out.printf("%-6s%-12s%13s%8.2f\n", "[B]", UPGRADE_NAME_B, "$", UPGRADE_PRICE_B);
+		System.out.printf("%-6s%-12s%20s%8.2f\n", "[C]", UPGRADE_NAME_C, "$", UPGRADE_PRICE_C);	
+		System.out.printf("%-6s%-12s%11s%8.2f\n", "[D]", UPGRADE_NAME_D, "$", UPGRADE_PRICE_D);	
+		System.out.printf("%-6s%-12s%12s%8.2f\n", "[E]", UPGRADE_NAME_E, "$", UPGRADE_PRICE_E);	
+		System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+		System.out.println("Enter your selection here:");
+	}//end DisplayUpgradeMenu method
+
+	//method header for get method, with parameters listed with type and "borrowed" name
+	public static String getUserName(Scanner borrowedInput)//return type: String
+	{
+		//initialize local variable
+		String localUserName = "";
+		//prime read
+		System.out.println("Enter your name, please.");
+		localUserName = borrowedInput.nextLine();
+		System.out.println("");//line break
+		
+		return localUserName;//return input from user
+	}//end getUserName method
+
+	//method header for validate method, with parameters listed with type and "borrowed" name
+	public static char validateDestinationSelection(Scanner borrowedInput)//return type: char
+	{
+		displayDestinationMenu();//call displayDestinationMenu method
+		
+		//initialize local variable
+		char localSelection = ' ';
+		localSelection = borrowedInput.next().toUpperCase().charAt(0);
+		System.out.println("");//line break
+		
+		//begin loop to determine if destinationSelection is valid
+		while (localSelection != 'A' && localSelection != 'B' && localSelection != 'C' && localSelection != 'Q')
+		{//begin while loop
+			System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+			System.out.println("The selection made is invalid. Please try again.");
+			System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");			
+			displayDestinationMenu();//call displayDestinationMenu method
+			localSelection = borrowedInput.next().toUpperCase().charAt(0);
+			System.out.println("");//line break
+		}//end loop
+		
+		return localSelection;//return selection from user
+	}//end validateDestinationSelection method
+
+	//method header for validate method, with parameters listed with type and "borrowed" name
+	public static char validateTransportationSelection(Scanner borrowedInput)//return type: char
+	{
+		displayTransportationMenu();//call displayTransportationMenu method
+		
+		//initialize local variable
+		char localSelection = ' ';
+		localSelection = borrowedInput.next().toUpperCase().charAt(0);
+		System.out.println("");//line break
+		
+		//begin loop to determine itemSelection is valid
+		while (localSelection != 'A' && localSelection != 'B')
+		{//begin while loop
+			System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+			System.out.println("The selection made is invalid. Please try again.");
+			System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+			displayTransportationMenu();//call displayTransportationMenu method
+			localSelection = borrowedInput.next().toUpperCase().charAt(0);
+			System.out.println("");//line break
+		}//end loop
+		
+		return localSelection;//return selection from user
+	}//end validateMainMenu method
+
+	//method header for validate method, with parameters listed with type and "borrowed" name
+	public static char validateUpgradeSelection(Scanner borrowedInput)//return type: char
+	{
+		displayUpgradeMenu();//call displayUpgradeMenu method
+		
+		//initialize local variable
+		char localSelection = ' ';
+		localSelection = borrowedInput.next().toUpperCase().charAt(0);
+		System.out.println("");//line break
+		
+		//begin loop to determine if upgradeSelection is valid
+		while (localSelection != 'A' && localSelection != 'B' && localSelection != 'C' && localSelection != 'D' && localSelection != 'E')
+		{//begin while loop
+			System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+			System.out.println("The selection made is invalid. Please try again.");
+			System.out.println("~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ~~~ ");
+			displayUpgradeMenu();//call displayUpgradeMenu method
+			localSelection = borrowedInput.next().toUpperCase().charAt(0);
+			System.out.println("");//line break
+		}//end loop
+		
+		return localSelection;//return selection from user
+	}//end validateUpgradeSelection method
+}//end main class
